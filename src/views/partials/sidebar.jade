@@ -1,0 +1,71 @@
+div(ng-controller='SideCtrl')  
+  .col-md-4.hidden-xs.hidden-sm
+    a.btn.btn-info.btn-lg.btn-block.btn-aporte(ng-show='user.username', href='http://sapecat.com.ve/#/contribute')
+      i.fa.fa-send.fa-2x
+      span Envia tu aporte
+    .box
+      h4.title
+        i.fa.fa-star.fa-fw
+        |               TOP 5 de usuarios
+      ul.nav.nav-tabs.nav-justified.nav-top_users(role='tablist')
+        li.active(role='presentation')
+          a(data-target='#semana', aria-controls='semana', role='tab', data-toggle='tab') Semana
+        li(role='presentation')
+          a(data-target='#month', aria-controls='month', role='tab', data-toggle='tab') Mes
+        li(role='presentation')
+          a(data-target='#year', aria-controls='year', role='tab', data-toggle='tab') Año
+      .tab-content
+        #semana.tab-pane.active(role='tabpanel')
+          h2(ng-hide='usersWeek.length > 0') Nadie por ahora :(
+          ul.top_users(ng-show='usersWeek.length > 0')
+            li.first
+              img.avatar.img-circle(ng-src='{{usersWeek[0]._id.picture}}')
+              .content
+                span.name {{usersWeek[0]._id.username}}
+                span {{usersWeek[0].points}} puntos
+            li(ng-repeat='user in usersWeek | startFrom: 1')
+              img.avatar.img-circle(ng-src='{{user._id.picture}}')
+              .content
+                span.name {{user._id.username}}
+                span {{user.points}} puntos
+        #month.tab-pane(role='tabpanel')
+          h2(ng-hide='usersMonth.length > 0') Nadie por ahora :(
+          ul.top_users(ng-show='usersMonth.length > 0')
+            li.first
+              img.avatar.img-circle(ng-src='{{usersMonth[0]._id.picture}}')
+              .content
+                span.name {{usersMonth[0]._id.username}}
+                span {{usersMonth[0].points}} puntos
+            li(ng-repeat='user in usersMonth | startFrom: 1')
+              img.avatar.img-circle(ng-src='{{user._id.picture}}')
+              .content
+                span.name {{user._id.username}}
+                span {{user.points}} puntos
+        #year.tab-pane(role='tabpanel')
+          h2(ng-hide='usersYear.length > 0') Nadie por ahora :(
+          ul.top_users(ng-show='usersYear.length > 0')
+            li.first
+              img.avatar.img-circle(ng-src='{{usersYear[0]._id.picture}}', alt='Avatar')
+              .content
+                span.name {{usersYear[0]._id.username}}
+                span {{usersYear[0].points}} puntos
+            li(ng-repeat='user in usersYear | startFrom: 1')
+              img.avatar.img-circle(ng-src='{{user._id.picture}}')
+              .content
+                span.name {{user._id.username}}
+                span {{user.points}} puntos
+    .fb-page(data-href='https://www.facebook.com/sapegatoVE/', data-width='600px', data-small-header='false', data-adapt-container-width='true', data-hide-cover='false', data-show-facepile='true')
+      blockquote.fb-xfbml-parse-ignore(cite='https://www.facebook.com/sapegatoVE/')
+        a(href='https://www.facebook.com/sapegatoVE/') Sapecat
+    .box(ng-show='yesterday')
+      h4.title Lo mejor de ayer
+      a(href='{{yesterday.urlPost}}')
+        div(ng-if="yesterday.mediaType == 'Video'")
+          iframe(ng-repeat='file in yesterday.files track by $index', width='100%', height='416px', ng-src='{{file | trusted}}', frameborder='0', allowfullscreen='', align='center')
+        div(ng-if="yesterday.mediaType != 'Video'")
+          div(ng-repeat='file in yesterday.files')
+            img.animate(ng-src='{{file}}')
+      a(href='{{yesterday.urlPost}}')
+        h4 {{yesterday.title}}
+    a.twitter-timeline(data-lang='es', data-height='350', data-theme='light', href='https://twitter.com/sapecatCOM') Tweets by DanielMrqz_
+    script(async='', src='//platform.twitter.com/widgets.js', charset='utf-8')

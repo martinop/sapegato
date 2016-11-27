@@ -1,0 +1,174 @@
+extend layout
+block content
+  .col-md-8(ng-controller="PostCtrl")
+    - var str = JSON.stringify(post)
+    a.btn.btn-info.btn-lg.btn-block.btn-aporte.visible-xs.visible-sm.m-b-xxl(href='http://sapecat.com.ve/#/contribute', ng-show='user.username')
+      i.fa.fa-send.fa-2x
+      span Envia tu aporte
+    .post(ng-init="setContent(#{str})")
+      .post-header
+        img.img-circle.thumb-md.pull-left.hidden-xs(ng-src='{{post.author.picture}}', alt='*')
+        h2.post-title {{post.title}}
+        timer.pull-right(start-time='post.date')
+          i.fa.fa-clock-o.fa-fw
+          | Hace 
+          span(ng-show='days > 1') {{days}} dias
+          span(ng-show='days == 1') {{days}} dia
+          span(ng-show='hours > 1 && days == 0 ')  {{hours}} horas
+          span(ng-show='hours == 1 && days == 0 ')  {{hours}} hora
+          span(ng-show='hours == 0 && days == 0 && minutes > 1')  {{minutes}} minutos
+          span(ng-show='hours == 0 && days == 0 && minutes == 1')  {{minutes}} minuto
+        .author
+          | Publicado por 
+          a(href='/{{post.author.username}}') {{post.author.username || post.author.name}}
+        .post-category
+          | {{post.category}}
+        .post-info
+          .post-points
+            i.fa.fa-trophy.fa-fw
+            |  {{post.likes - post.dislikes}} 
+            span puntos
+          .post-comments
+            i.fa.fa-comments.fa-fw
+            |  {{post.comments.length}} 
+            span comentarios
+      .post-body
+        div(ng-if="post.mediaType == 'Video'")
+          iframe(ng-repeat='file in post.files track by $index', width='100%', height='416px', ng-src='{{file | trusted}}', frameborder='0', allowfullscreen='', align='center')
+        div(ng-if="post.mediaType != 'Video'")
+          div(ng-repeat='file in post.files')
+            img.animate(ng-src='{{file}}')
+      .post-footer
+        .block
+          a.fuente(ng-show='post.source') {{post.source}}
+          a(ng-repeat='tag in post.tags', href='') {{tag}}
+        .pull-right.share
+          script.
+            !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
+          a.share-btn.twitter(href='http://twitter.com/share?url=#{url}', target='_blank')
+            i.fa.fa-twitter
+          a.share-btn.google-plus(href='https://plus.google.com/share?url=#{url}', target='_blank')
+            i.fa.fa-google-plus
+          span(data-href="#{url}")
+            a.share-btn.facebook(href='http://www.facebook.com/sharer/sharer.php?u=#{url}&amp;src=sdkpreparse', target='_blank')
+              i.fa.fa-facebook
+        div(ng-show='user')
+          a(ng-class="post.likers.indexOf(user._id) != -1 ? 'btn btn-default active-u' : 'btn btn-default'", ng-click="vote('like', post, 'Post')")
+            i.fa.fa-thumbs-up.fa-fw
+          a(ng-class="post.dislikers.indexOf(user._id) != -1 ? 'btn btn-default active-d' : 'btn btn-default'", ng-click="vote('dislike', post, 'Post')")
+            i.fa.fa-thumbs-down.fa-fw
+
+      .comments
+        h4.title
+          ul.nav.nav-pills.navbar-right
+            li.active
+              a(href='#recent', data-toggle='tab') Más recientes
+            li
+              a(href='#popular', data-toggle='tab') Más populares
+            li
+              a(href='#old', data-toggle='tab') Más antiguos
+          i.fa.fa-comments.fa-fw
+          |  Comentarios ({{post.comments.length}})
+        .tab-content
+          #recent.tab-pane.active
+            div(ng-repeat="comment in post.comments | orderBy: '-date'")
+              a.pull-left.thumb-sm
+                img.img-circle(src='{{comment.author.picture}}')
+              .m-l-xxl.m-b
+                div
+                  a(href='http://sapecat.com.ve/{{comment.author.username}}')
+                    strong {{comment.author.username}}
+                  .pull-right.text-muted.likes
+                    i.fa.fa-thumbs-o-up.fa-fw
+                    |  {{comment.likes - comment.dislikes}}
+                  timer.text-muted.text-xs.block.m-t-xs(start-time='comment.date' ng-if="comment.date")
+                    | Hace 
+                    span(ng-show='days > 1') {{days}} dias
+                    span(ng-show='days == 1') {{days}} dia
+                    span(ng-show='hours > 1 && days == 0 ')  {{hours}} horas
+                    span(ng-show='hours == 1 && days == 0 ')  {{hours}} hora
+                    span(ng-show='hours == 0 && days == 0 && minutes > 1')  {{minutes}} minutos
+                    span(ng-show='hours == 0 && days == 0 && minutes == 1')  {{minutes}} minuto
+                .m-t-sm
+                  | {{comment.text}}
+                .m-t-sm
+                  a.btn.btn-default.btn-xs(ng-click="vote('like', comment, 'Comment')")
+                    i(ng-class="comment.likers.indexOf(user._id) != -1 ? 'fa fa-thumbs-up text-loved fa-fw' : 'fa fa-thumbs-up fa-fw'")
+                    |  Like
+                  a.btn.btn-default.btn-xs(ng-click="vote('dislike', comment, 'Comment')")
+                    i(ng-class="comment.dislikers.indexOf(user._id) != -1 ? 'fa fa-thumbs-down text-loved fa-fw' : 'fa fa-thumbs-down fa-fw'")
+                    |  Dislike
+                  a.btn.btn-default.btn-xs(href='')
+                    i.fa.fa-mail-reply.text-muted.fa-fw
+                    |  Responder
+          #popular.tab-pane
+            div(ng-repeat="comment in post.comments | orderBy: '-likes'")
+              a.pull-left.thumb-sm
+                img.img-circle(src='{{comment.author.picture}}')
+              .m-l-xxl.m-b
+                div
+                  a(href='http://sapecat.com.ve/{{comment.author.username}}')
+                    strong {{comment.author.username}}
+                  .pull-right.text-muted.likes
+                    i.fa.fa-thumbs-o-up.fa-fw
+                    |  {{comment.likes - comment.dislikes}}
+                  timer.text-muted.text-xs.block.m-t-xs(start-time='comment.date' ng-if="comment.date")
+                    | Hace 
+                    span(ng-show='days > 1') {{days}} dias
+                    span(ng-show='days == 1') {{days}} dia
+                    span(ng-show='hours > 1 && days == 0 ')  {{hours}} horas
+                    span(ng-show='hours == 1 && days == 0 ')  {{hours}} hora
+                    span(ng-show='hours == 0 && days == 0 && minutes > 1')  {{minutes}} minutos
+                    span(ng-show='hours == 0 && days == 0 && minutes == 1')  {{minutes}} minuto
+                .m-t-sm
+                  | {{comment.text}}
+                .m-t-sm
+                  a.btn.btn-default.btn-xs(ng-click="vote('like', comment, 'Comment')")
+                    i(ng-class="comment.likers.indexOf(user._id) != -1 ? 'fa fa-thumbs-up text-loved fa-fw' : 'fa fa-thumbs-up fa-fw'")
+                    |  Like
+                  a.btn.btn-default.btn-xs(ng-click="vote('dislike', comment, 'Comment')")
+                    i(ng-class="comment.dislikers.indexOf(user._id) != -1 ? 'fa fa-thumbs-down text-loved fa-fw' : 'fa fa-thumbs-down fa-fw'")
+                    |  Dislike
+                  a.btn.btn-default.btn-xs(href='')
+                    i.fa.fa-mail-reply.text-muted.fa-fw
+                    |  Responder
+          #old.tab-pane
+            div(ng-repeat="comment in post.comments | orderBy: 'date'")
+              a.pull-left.thumb-sm
+                img.img-circle(src='{{comment.author.picture}}')
+              .m-l-xxl.m-b
+                div
+                  a(href='http://sapecat.com.ve/{{comment.author.username}}')
+                    strong {{comment.author.username}}
+                  .pull-right.text-muted.likes
+                    i.fa.fa-thumbs-o-up.fa-fw
+                    |  {{comment.likes - comment.dislikes}}
+                  timer.text-muted.text-xs.block.m-t-xs(start-time='comment.date' ng-if="comment.date")
+                    | Hace 
+                    span(ng-show='days > 1') {{days}} dias
+                    span(ng-show='days == 1') {{days}} dia
+                    span(ng-show='hours > 1 && days == 0 ')  {{hours}} horas
+                    span(ng-show='hours == 1 && days == 0 ')  {{hours}} hora
+                    span(ng-show='hours == 0 && days == 0 && minutes > 1')  {{minutes}} minutos
+                    span(ng-show='hours == 0 && days == 0 && minutes == 1')  {{minutes}} minuto
+                .m-t-sm
+                  | {{comment.text}}
+                .m-t-sm
+                  a.btn.btn-default.btn-xs(ng-click="vote('like', comment, 'Comment')")
+                    i(ng-class="comment.likers.indexOf(user._id) != -1 ? 'fa fa-thumbs-up text-loved fa-fw' : 'fa fa-thumbs-up fa-fw'")
+                    |  Like
+                  a.btn.btn-default.btn-xs(ng-click="vote('dislike', comment, 'Comment')")
+                    i(ng-class="comment.dislikers.indexOf(user._id) != -1 ? 'fa fa-thumbs-down text-loved fa-fw' : 'fa fa-thumbs-down fa-fw'")
+                    |  Dislike
+                  a.btn.btn-default.btn-xs(href='')
+                    i.fa.fa-mail-reply.text-muted.fa-fw
+                    |  Responder
+        .reply(ng-if="user.username")
+          a.pull-left.thumb-sm
+            img.img-circle(src='{{user.picture}}')
+          .m-l-xxl
+            .input-group
+              textarea.form-control.input-lg(style='height: 46px !important;resize: none;', placeholder='Deja un comentario...' ng-model="newComment.text")
+              .input-group-btn
+                a.btn.btn-info.btn-lg(ng-click='sendComment()') Publicar
+

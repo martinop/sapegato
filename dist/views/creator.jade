@@ -1,0 +1,17 @@
+extend layout
+block content
+  .col-md-8(ng-controller="CreatorCtrl")
+    a.btn.btn-info.btn-lg.btn-block.btn-aporte.visible-xs.visible-sm.m-b-xxl(href='http://sapecat.com.ve/#/contribute', ng-show='user.username')
+    i.fa.fa-send.fa-2x
+    span Envia tu aporte
+    .box
+        h1.text-bold Creador de imagenes con texto personalizado
+        #creator
+          img(src="app/img/creator-wallpaper.jpg")
+          .box-center
+            h2 {{text}}
+        .form-group
+          h2 Texto personalizado
+          textarea.form-control(ng-model='text', placeholder='Ingresa tu mensaje personalizado..')
+        .form-group
+          button.btn.btn-info.pull-right(ng-click='takePicture()') Generar

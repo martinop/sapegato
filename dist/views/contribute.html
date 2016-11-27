@@ -1,0 +1,93 @@
+<div class="box m-b-xxl">
+	<h2>Envia tu aporte</h2>
+	<div ng-show="!post.mediaType">
+		<div class="col-md-4 text-center m-t-sm"ng-click="post.mediaType = 'Imagen'">
+			<i class="fa fa-picture-o fa-4x"></i>
+	  		<h4>Imagen</h4>
+		</div>
+		<div class="col-md-4 text-center m-t-sm"ng-click="post.mediaType = 'GIF'">
+			<i class="fa fa-file-image-o fa-4x"></i>
+			<h4>GIF</h4>
+		</div>
+		<div class="col-md-4 text-center m-t-sm"ng-click="post.mediaType = 'Video'"> 
+			<i class="fa fa-file-video-o fa-4x"></i>
+	  		<h4>Video</h4>
+	  	</div>
+	</div>
+
+	<div ng-show="post.mediaType">
+		<div class="form-group">
+			<label>Titulo (*)</label>
+			<input type="text" class="form-control" ng-model="post.title"placeholder="Titulo de la publicacion..">
+		</div>
+		<div class="form-group">
+			<label>Descripcion</label>
+			<textarea class="form-control"ng-model="post.description" placeholder="Descripcion de la publicacion.."></textarea>
+		</div>
+		<div class="form-group"ng-if="post.mediaType == 'Imagen'">
+			<label>Categorias (*)</label>
+			<select ng-init="post.category = 'Memes'" class="form-control"ng-model="post.category">
+				<option>Memes</option>
+				<option>Otros</option>
+			</select>
+		</div>
+		<div class="form-group">
+			<label>URL de los archivos(*) Si tienes varias URL debes agregar una por una.</label>
+			<h4>Has agregado {{post.files.length}} Archivos</h4>
+			<input type="text" class="form-control"ng-model="url"placeholder="Agrega la URL..">
+		</div>
+		<div class="form-group">
+			<button ng-show="url.length > 0"ng-click="addUrl()"class="btn btn-info pull-right m-t-sm">Agregar URL</button>
+			<button ng-show="files.length > 0 && post.mediaType != 'Video'"ng-click="processFiles(files)"class="btn btn-info pull-right m-t-sm">Agregar Archivos</button>
+		</div>
+		<div class="form-group"ng-show="post.mediaType != 'Video'">
+			<label>O sube tu imagen</label>
+		    <input type="file" ngf-select ng-model="files"multiple="multiple"name="file" ngf-pattern="'image/*'"ngf-accept="'image/*'">
+		</div> 
+
+		<div class="form-group">
+			<label>Fuente</label>
+			<input type="text" class="form-control"ng-model="post.source"placeholder="Enlace de la fuente...">
+		</div>
+		<div class="form-group">
+			<label>Etiquetas</label>
+			<input type="text" class="form-control" ng-model="post.tags" placeholder="Por ejemplo: hola, que, tal">
+		</div>
+		<small>(*) Campo obligatorio</small>
+	  	<div class="progress"ng-show="progress > 0">
+	    	<div class="progress-bar" role="progressbar" aria-valuenow="{{progress}}" aria-valuemin="0" aria-valuemax="100" style="width:{{progress}}%">
+	      		<span class="sr-only">{{progress}}0% Completado</span>
+	    	</div>
+	  	</div>
+		<button ng-click="addPost()"class="btn btn-info pull-right">Enviar</button>
+		<a ng-show="post.title && post.files.length > 0 && post.category"class="btn btn-black pull-right" data-toggle="collapse" data-target="#preview" aria-expanded="false" aria-controls="preview">Preview</a>
+	</div>
+</div>
+<div id="preview" class="post collapse"ng-show="post.title && post.files.length > 0 && post.category">
+	<div class="post-header">
+		<img class="img-circle thumb-md pull-left" src="{{user.picture}}" alt="*" />
+		<h2 class="post-title">{{post.title}}</h2>
+		<div class="author">Publicado por {{user.username}}</div>
+		<div class="post-category">
+			{{post.category}}
+		</div>
+	</div>
+	<div class="post-body" >
+	    <div class="firma" id="images"ng-if="post.mediaType != 'Video'">
+	   		<div id="files">
+	        	<div class="firma-r">
+	          		<img src="app/img/firmacat.png" alt="Sapegato firma">
+	         	</div>
+	         		<img ng-repeat="file in post.files track by $index"class="animate" ng-src="{{file}}" />
+	    	</div>
+	   	</div>
+     	<div ng-if="post.mediaType == 'Video'">
+     		<iframe ng-repeat="file in post.files track by $index"width="100%" height="416px" ng-src="{{file | trusted}}" frameborder="0" allowfullscreen="" align="center"></iframe>
+     	</div>
+	</div>
+	<div class="post-footer">
+		<div class="block">
+			<a class="fuente"ng-show="post.source">{{post.source}}</a><a href="#"ng-repeat="tag in post.tags.split(',') track by $index">{{tag}}</a>
+		</div>
+	</div>
+</div>

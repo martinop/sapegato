@@ -1,0 +1,74 @@
+extend layout
+block content
+  - var p = JSON.stringify(posts)
+  - var u = JSON.stringify(user)
+  .col-md-8(ng-controller="PostsCtrl" ng-init="setContent(#{p})")
+    .profile(ng-init="setUser(#{u})" style='background-image:url({{user.cover}})')
+      .wrapper-lg.bg-white-opacity
+        .row.m-t
+          .col-sm-8
+            a.thumb-lg.pull-left.m-r(href='')
+              img.img-circle(ng-src='{{user.picture}}')
+            .clear.m-b
+              .m-b.m-t-sm
+                h3.h3.text-black {{user.name}} 
+                h4.m-l {{user.city}}, {{user.country}}
+              p
+                a.btn.btn-sm.btn-bg.btn-rounded.btn-default.btn-icon(href='https://twitter.com/{{user.username_twitter}}')
+                  i.fa.fa-twitter
+                a(ng-show="user.username_facebook").btn.btn-sm.btn-bg.btn-rounded.btn-default.btn-icon(href='https://www.facebook.com/{{user.username_facebook}}')
+                  i.fa.fa-facebook
+                a(ng-show="user.username_instagram").btn.btn-sm.btn-bg.btn-rounded.btn-default.btn-icon(href='http://instagram.com/{{user.username_instagram}}')
+                  i.fa.fa-instagram
+    .post(ng-repeat="post in content")
+      .post-header
+        img.img-circle.thumb-md.pull-left(ng-src='{{post.author.picture}}', alt='*')
+        a(href="{{post.urlPost}}")
+          h2.post-title {{post.title}}
+        timer.pull-right(start-time='post.date')
+          i.fa.fa-clock-o.fa-fw
+          | Hace 
+          span(ng-show='days > 1') {{days}} dias
+          span(ng-show='days == 1') {{days}} dia
+          span(ng-show='hours > 1 && days == 0 ')  {{hours}} horas
+          span(ng-show='hours == 1 && days == 0 ')  {{hours}} hora
+          span(ng-show='hours == 0 && days == 0 && minutes > 1')  {{minutes}} minutos
+          span(ng-show='hours == 0 && days == 0 && minutes == 1')  {{minutes}} minuto
+        .author
+          | Publicado por 
+          a(href='/{{post.author.username}}') {{post.author.username || post.author.name}}
+
+        .post-category
+          | {{post.category}}
+        .post-info
+          .post-points
+            i.fa.fa-trophy.fa-fw
+            |  {{post.likes - post.dislikes}} puntos
+          .post-comments
+            i.fa.fa-comments.fa-fw
+            |  {{post.comments.length}} comentarios
+      .post-body
+        div(ng-if="post.mediaType == 'Video'")
+          iframe(ng-repeat='file in post.files track by $index', width='100%', height='416px', ng-src='{{file | trusted}}', frameborder='0', allowfullscreen='', align='center')
+        div(ng-if="post.mediaType != 'Video'")
+          div(ng-repeat='file in post.files')
+            img.animate(ng-src='{{file}}')
+      .post-footer
+        .block
+          a.fuente(ng-show='post.source') {{post.source}}
+          a(ng-repeat='tag in post.tags', href='') {{tag}}
+        .pull-right.share
+          script.
+            !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
+          a.share-btn.twitter(href='http://twitter.com/share?url={{post.urlPost}}', target='_blank')
+            i.fa.fa-twitter
+          a.share-btn.google-plus(href='https://plus.google.com/share?url={{post.urlPost}}', target='_blank')
+            i.fa.fa-google-plus
+          span(data-href="{{post.urlPost}}")
+            a.share-btn.facebook(href='http://www.facebook.com/sharer/sharer.php?u={{post.urlPost}}&amp;src=sdkpreparse', target='_blank')
+              i.fa.fa-facebook
+        div(ng-show='user')
+          a(ng-class="post.likers.indexOf(user._id) != -1 ? 'btn btn-default active-u' : 'btn btn-default'", ng-click="vote('like', post)")
+            i.fa.fa-thumbs-up.fa-fw
+          a(ng-class="post.dislikers.indexOf(user._id) != -1 ? 'btn btn-default active-d' : 'btn btn-default'", ng-click="vote('dislike', post)")
+            i.fa.fa-thumbs-down.fa-fw

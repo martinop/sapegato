@@ -1,0 +1,19 @@
+extend layout
+block content
+  .col-md-8(ng-controller="ContactCtrl")
+    a.btn.btn-info.btn-lg.btn-block.btn-aporte.visible-xs.visible-sm.m-b-xxl(href='http://sapecat.com.ve/#/contribute', ng-show='user.username')
+      i.fa.fa-send.fa-2x
+      span Envia tu aporte
+    .box
+      h2 Contacto
+      form(ng-submit="sendEmail()")
+        .form-group
+          label Asunto
+          input.form-control(type='text', ng-model="email.subject" placeholder='Asunto del mensaje..')
+        .form-group
+          label Nombre
+          input.form-control(type='text', ng-model="email.name" placeholder='Nombre..')
+        .form-group
+          label Mensaje
+          textarea.form-control(style='height:150px', ng-model="email.message" placeholder='Mensaje..')
+        button.btn.btn-info.pull-right(type='submit') Enviar

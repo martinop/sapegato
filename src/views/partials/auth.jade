@@ -1,0 +1,58 @@
+div(ng-controller="AuthCtrl")
+  #modal-register.modal.fade(tabindex='-1', role='dialog')
+    .modal-dialog
+      .modal-content
+        .modal-header
+          button.close(type='button', data-dismiss='modal', aria-label='Close')
+            span(aria-hidden='true') ×
+          h2.modal-title Registro
+        .modal-body
+          .social-login
+            p.social-p Registrate con una red social
+            .row
+              .col-md-6
+                button.btn.btn-facebook.btn-block.btn-social.btn-lg(ng-click="authenticate('facebook')")
+                  i.fa.fa-facebook.fa-2x.pull-left
+                  span Facebook
+              .col-md-6
+                button.btn.btn-twitter.btn-block.btn-social.btn-lg(ng-click="authenticate('twitter')")
+                  i.fa.fa-twitter.fa-2x.pull-left
+                  span Twitter
+              .col-md-6
+                button.btn.btn-google-plus.btn-block.btn-social.btn-lg(ng-click="authenticate('google')")
+                  i.fa.fa-google-plus.fa-2x.pull-left
+                  span Google +
+              .col-md-6
+                button(disabled).btn.btn-instagram.btn-block.btn-social.btn-lg(ng-click="authenticate('instagram')")
+                  i.fa.fa-instagram.fa-2x.pull-left
+                  span Instagram
+          hr
+          | 					¿Tienes una cuenta? 
+          a.text-muted(href='', data-toggle='modal', data-target='#modal-login', data-dismiss='modal') Login
+  #modal-login.modal.fade(tabindex='-1', role='dialog')
+    .modal-dialog
+      .modal-content
+        .modal-header
+          button.close(type='button', data-dismiss='modal', aria-label='Close')
+            span(aria-hidden='true') ×
+          h2.modal-title Login
+        .modal-body
+          .social-login
+            p.social-p Conectate con una red social
+            .row
+              .col-md-6
+                button.btn.btn-facebook.btn-block.btn-social.btn-lg(ng-click="authenticate('facebook')")
+                  i.fa.fa-facebook.fa-2x.pull-left
+                  span Facebook
+              .col-md-6
+                button.btn.btn-twitter.btn-block.btn-social.btn-lg(ng-click="authenticate('twitter')")
+                  i.fa.fa-twitter.fa-2x.pull-left
+                  span Twitter
+              .col-md-6
+                button.btn.btn-google-plus.btn-block.btn-social.btn-lg(ng-click="authenticate('google')")
+                  i.fa.fa-google-plus.fa-2x.pull-left
+                  span Google +
+              .col-md-6
+                button(disabled).btn.btn-instagram.btn-block.btn-social.btn-lg(ng-click="authenticate('instagram')")
+                  i.fa.fa-instagram.fa-2x.pull-left
+                  span Instagram

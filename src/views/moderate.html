@@ -1,0 +1,31 @@
+<div class="box">
+	<h2>Moderacion</h2>
+	<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+	  	<div class="panel panel-default"ng-repeat="post in posts track by $index">
+			<div class="panel-heading" role="tab" id="headingOne{{$index+1}}">
+				<h4 class="panel-title">
+				<a role="button" data-toggle="collapse" data-parent="#accordion" data-target="#collapseOne{{$index+1}}" aria-expanded="true" aria-controls="collapseOne{{$index+1}}">
+					<span class="text-bold">{{post.title}}</span><span class="pull-right">Por {{post.author.username}}</span>
+				</a>
+			  	</h4>
+			</div>
+			<div id="collapseOne{{$index+1}}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne{{$index+1}}">
+				<div class="panel-body">
+			     	<div ng-if="post.mediaType == 'Video'">
+			     		<iframe ng-repeat="file in post.files track by $index"width="100%" height="416px" ng-src="{{file | trusted}}" frameborder="0" allowfullscreen="" align="center"></iframe>
+			     	</div>
+			     	<div ng-if="post.mediaType != 'Video'">
+				  		<div ng-repeat="file in post.files">
+							<img class="animate block" ng-src="{{file}}" />
+				  		</div>
+			  		</div>
+					<h3 class="m-t">{{post.description}} | {{post.category}}</h3>
+					<div class="pull-right">
+						<button type="button" class="btn btn-info"ng-click="audit(true, post, post.files[0])">Aceptar</button>
+						<button type="button" class="btn btn-danger"ng-click="audit(false, post, post.files[0])">Rechazar</button>
+					</div>
+			  	</div>
+			</div>
+	  	</div>
+	</div>
+</div>

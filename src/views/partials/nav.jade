@@ -1,0 +1,79 @@
+nav.navbar.navbar-default.navbar-fixed-top.big(ng-controller='NavCtrl')
+  .container-fluid
+    .navbar-header
+      button.navbar-toggle.collapsed(type='button', data-toggle='collapse', data-target='#menu')
+        span.sr-only Toggle navigation
+        span.icon-bar
+        span.icon-bar
+        span.icon-bar
+      button.navbar-toggle.collapsed(type='button', data-toggle='collapse', data-target='#user', ng-show='user')
+        i.fa.fa-user
+      a.visible-xs(href='javascript:void(0);', data-toggle='modal', data-target='#modal-login', ng-show='!user')
+        i.fa.fa-sign-in.fa-fw
+      a.visible-xs(href='javascript:void(0);', data-toggle='modal', data-target='#modal-register', ng-show='!user')
+        i.fa.fa-key.fa-fw
+      a.navbar-brand(href='http://sapecat.com.ve/')
+        img(src='http://sapecat.com.ve/app/img/logo.png', alt='Sapegatologo')
+    #menu.collapse.navbar-collapse
+      ul.nav.navbar-nav
+        li.active
+          a(href='http://sapecat.com.ve/')
+            i.fa.fa-home.fa-fw
+            |  Inicio
+        li
+          a(href='http://sapecat.com.ve/')
+            i.fa.fa-star.fa-fw
+            |  TOP
+        li
+          a(href='http://sapecat.com.ve/category/Memes') Memes
+        li
+          a(href='http://sapecat.com.ve/category/Otros') Otros
+        li
+          a.visible-xs(href='javascript:void(0);', data-toggle='modal', data-target='#modal-login', ng-show='!user')
+            i.fa.fa-sign-in.fa-fw
+            |  Login
+        li
+          a.visible-xs(href='javascript:void(0);', data-toggle='modal', data-target='#modal-register', ng-show='!user')
+            i.fa.fa-key.fa-fw
+            |  Registro
+    #user.collapse.navbar-collapse(ng-show='user')
+      ul.nav.navbar-nav.visible-xs
+        li
+          a(href='http://sapecat.com.ve/#editprofile')
+            i.fa.fa-edit.fa-fw
+            |  Editar perfil
+        li
+          a(href='http://sapecat.com.ve/#moderate')
+            i.fa.fa-gear.fa-fw
+            |  Moderacion
+        li
+          a(ng-click='logout()')
+            i.fa.fa-sign-out.fa-fw
+            |  Cerrar sesion
+    ul.nav.navbar-nav.navbar-right.hidden-xs
+      li.dropdown.user(ng-show='user')
+        a.dropdown-toggle(href='', data-toggle='dropdown')
+          img.img-circle.thumb-sm(ng-src='{{user.picture}}', alt='*')
+          | 						{{user.username || user.name}}
+        ul.dropdown-menu
+          li
+            a(href='http://sapecat.com.ve/#editprofile')
+              i.fa.fa-edit.fa-fw
+              |  Editar perfil
+          li(ng-show="user.permission != 'user'")
+            a(href='http://sapecat.com.ve/#moderate')
+              i.fa.fa-gear.fa-fw
+              |  Moderacion
+          li
+            a(ng-click='logout()')
+              i.fa.fa-sign-out.fa-fw
+              |  Cerrar sesion
+      li.nav-icons(ng-show='!user')
+        .ui-group-buttons
+          a.btn.btn-success(data-toggle='modal', data-target='#modal-login')
+            i.fa.fa-sign-in.fa-fw
+            span  Login
+          .or
+          a.btn.btn-info(data-toggle='modal', data-target='#modal-register')
+            i.fa.fa-key.fa-fw
+            span  Registro

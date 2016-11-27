@@ -1,0 +1,63 @@
+<div class="post"ng-repeat="post in posts">
+	<div class="post-header">
+		<a href="/{{post.author.username}}">
+			<img class="img-circle thumb-md pull-left" ng-src="{{post.author.picture}}" href=alt="*" />
+		</a>
+		<a href="{{post.urlPost}}"><h2 class="post-title">{{post.title}}</h2></a>
+		<timer start-time="post.date" class="pull-right"><i class="fa fa-clock-o fa-fw"></i>Hace 
+			<span ng-show="days > 1">{{days}} dias</span>
+			<span ng-show="days == 1">{{days}} dia</span>
+			<span ng-show="hours > 1 && days == 0 "> {{hours}} horas</span>
+			<span ng-show="hours == 1 && days == 0 "> {{hours}} hora</span>
+			<span ng-show="hours == 0 && days == 0 && minutes > 1"> {{minutes}} minutos</span>
+			<span ng-show="hours == 0 && days == 0 && minutes == 1"> {{minutes}} minuto</span>
+			<span ng-show="hours == 0 && days == 0 && minutes == 0"> segundos </span>
+		</timer>
+		<div class="author">Publicado por <a href="/{{post.author.username}}">{{post.author.username || post.author.name}}</a></div>
+		<div class="post-category">
+			{{post.category}}
+		</div> 
+		<div class="post-info">							
+			<div class="post-points"><i class="fa fa-trophy fa-fw"></i> {{post.likes - post.dislikes}} <span>puntos</span></div>
+			<div class="post-comments"><i class="fa fa-comments fa-fw"></i> {{post.comments.length}} <span>comentarios</span></div>
+		</div>
+	</div>
+	<div class="post-body">
+     	<div ng-if="post.mediaType == 'Video'">
+     		<iframe ng-repeat="file in post.files track by $index"width="100%" height="416px" ng-src="{{file | trusted}}" frameborder="0" allowfullscreen="" align="center"></iframe>
+     	</div>
+     	<div ng-if="post.mediaType != 'Video'">
+	  		<div ng-repeat="file in post.files">
+				<img class="animate" ng-src="{{file}}" />
+	  		</div>
+  		</div>
+	</div>
+	<div class="post-footer">
+		<div class="block">
+			<a class="fuente" ng-show="post.source">{{post.source}}</a>
+				<a ng-repeat="tag in post.tags"href="">{{tag}}</a>
+		</div>
+		<div class="pull-right share">
+			<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+			<a href="http://twitter.com/share?url={{post.urlPost}}" target="_blank" class="share-btn twitter">
+				<i class="fa fa-twitter"></i>
+			</a>
+			<a href="https://plus.google.com/share?url={{post.urlPost}}" target="_blank" class="share-btn google-plus">
+			    <i class="fa fa-google-plus"></i>
+			</a>
+			<span data-href="http://sapecat.com.ve/post/{{post.urlPost}}">
+				<a href="http://www.facebook.com/sharer/sharer.php?u={{post.urlPost}}&amp;src=sdkpreparse" target="_blank" class="share-btn facebook">
+				    <i class="fa fa-facebook"></i>
+				</a>
+			</span>
+		</div>
+		<div ng-show="user">
+			<a ng-class="post.likers.indexOf(user._id) != -1 ? 'btn btn-default active-u' : 'btn btn-default'" ng-click="vote('like', post)"><i class="fa fa-thumbs-up fa-fw"></i></a>
+   			<a ng-class="post.dislikers.indexOf(user._id) != -1 ? 'btn btn-default active-d' : 'btn btn-default'"  ng-click="vote('dislike', post)"><i class="fa fa-thumbs-down fa-fw"></i></a>
+		</div>
+	</div>
+</div>
+<div class="loading-post"ng-show="loading">
+    <i class="fa fa-spinner fa-pulse fa-2x fa-fw"></i>
+    <span>Cargando mas contenido...</span>
+</div>
